@@ -41,25 +41,45 @@ gedit .env
 Paste this into `.env` and save:
 
 ```env
-# BriskDocu Taiga – Secure & Ready
-SECRET_KEY=replace_this_with_output_below
-POSTGRES_USER=taiga
+
+# Taiga's URLs - Variables to define where Taiga should be served
+TAIGA_SCHEME=http  # serve Taiga using "http" or "https" (secured) connection
+TAIGA_DOMAIN=192.168.150.188:9000  # Taiga's base URL or lohalhost:9000
+SUBPATH="" # it'll be appended to the TAIGA_DOMAIN (use either "" or a "/subpath")
+WEBSOCKETS_SCHEME=ws  # events connection protocol (use either "ws" or "wss")
+
+# Taiga's Secret Key - Variable to provide cryptographic signing
+SECRET_KEY="[GENERATE USING BELOW COMMAND]"  
+
+# Please, change it to an unpredictable value!!
+
+# Taiga's Database settings - Variables to create the Taiga database and connect to it
+POSTGRES_USER=taiga  # user to connect to PostgreSQL
 POSTGRES_PASSWORD=[DBPASSWORD]
 
-RABBITMQ_USER=taiga
-RABBITMQ_PASS=replace_this_with_output_below
-RABBITMQ_ERLANG_COOKIE=replace_this_with_output_below
-RABBITMQ_VHOST=taiga
+# Taiga's SMTP settings - Variables to send Taiga's emails to the users
+EMAIL_BACKEND=console  # use an SMTP server or display the emails in the console (either "smtp" or "console")
+EMAIL_HOST=smtp.host.example.com  # SMTP server address
+EMAIL_PORT=587   # default SMTP port
+EMAIL_HOST_USER=user  # user to connect the SMTP server
+EMAIL_HOST_PASSWORD=password  # SMTP user's password
+EMAIL_DEFAULT_FROM=changeme@example.com  # default email address for the automated emails
+# EMAIL_USE_TLS/EMAIL_USE_SSL are mutually exclusive (only set one of those to True)
+EMAIL_USE_TLS=True  # use TLS (secure) connection with the SMTP server
+EMAIL_USE_SSL=False  # use implicit TLS (secure) connection with the SMTP server
 
-TAIGA_SCHEME=http
-TAIGA_DOMAIN=localhost:9000
-WEBSOCKETS_SCHEME=ws
+# Taiga's RabbitMQ settings - Variables to leave messages for the realtime and asynchronous events
+RABBITMQ_USER=taiga  # user to connect to RabbitMQ
+RABBITMQ_PASS=[GENERATE USING BELOW COMMAND]
+RABBITMQ_VHOST=taiga  # RabbitMQ container name
+RABBITMQ_ERLANG_COOKIE=[GENERATE USING BELOW COMMAND]
+# unique value shared by any connected instance of RabbitMQ
 
-SUBPATH=
-EMAIL_BACKEND=console
-ENABLE_TELEMETRY=False
-PUBLIC_REGISTER_ENABLED=True
-ATTACHMENTS_MAX_AGE=3600
+# Taiga's Attachments - Variable to define how long the attachments will be accesible
+ATTACHMENTS_MAX_AGE=360  # token expiration date (in seconds)
+
+# Taiga's Telemetry - Variable to enable or disable the anonymous telemetry
+ENABLE_TELEMETRY=True
 ```
 
 Generate strong secrets:
@@ -84,7 +104,7 @@ Create your admin user:
 docker-compose run --rm --entrypoint="" taiga-back python manage.py createsuperuser
 ```
 
-Open Taiga: http://localhost:9000
+Open Taiga: http://localhost:9000 OR local ip : http://192.168.x.x:9000 
 
 ---
 
